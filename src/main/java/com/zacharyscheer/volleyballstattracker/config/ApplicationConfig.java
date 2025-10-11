@@ -6,83 +6,58 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * Defines the core security beans, including the AuthenticationManager,
- * the Password Encoder, and the temporary in-memory user lookup.
- */
 @Configuration
 public class ApplicationConfig {
 
-    // --- TEMPORARY IN-MEMORY USER STORE ---
-    private final Map<String, UserDetails> inMemoryUsers = new HashMap<>();
+    // --- Core Security Beans ---
 
-    // FIX: Use a local PasswordEncoder instance in the constructor to avoid circular dependency.
-    public ApplicationConfig() {
-        // Use a local instance of the encoder for creating the test user
-        PasswordEncoder localEncoder = new BCryptPasswordEncoder();
-
-        // Initializes a temporary user for testing the login endpoint.
-        // Credentials: testuser@volleyball.com / password
-        String encodedPassword = localEncoder.encode("password");
-        UserDetails testUser = User.builder()
-                .username("testuser@volleyball.com")
-                .password(encodedPassword)
-                .roles("USER")
-                .build();
-        inMemoryUsers.put(testUser.getUsername(), testUser);
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
-    // --- END TEMPORARY USER STORE ---
 
-    /**
-     * Defines the BCrypt algorithm for securely hashing passwords.
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * Defines how Spring should look up a user by their username (email).
-     */
+    // --- Temporary UserDetailsService (Fixed for both Login and JWT) ---
+
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            UserDetails user = inMemoryUsers.get(username);
-            if (user == null) {
-                throw new UsernameNotFoundException("User not found: " + username);
+            if ("testuser@volleyball.com".equals(username)) {
+                // When loading the user for ANY purpose (Login OR JWT validation),
+                // we MUST provide the *encoded* password so the login provider can compare it.
+                // We use passwordEncoder().encode("password") to generate the encoded hash every time.
+                return org.springframework.security.core.userdetails.User
+                        .withUsername("testuser@volleyball.com")
+                        // REVERTED FIX: The password must be encoded for the login to work!
+                        .password(passwordEncoder().encode("password"))
+                        .authorities("USER")
+                        .accountExpired(false)
+                        .accountLocked(false)
+                        .credentialsExpired(false)
+                        .disabled(false)
+                        .build();
             }
-            return user;
+            throw new UsernameNotFoundException("User not found: " + username);
         };
     }
 
-    /**
-     * Defines the Authentication Provider: uses the UserDetailsService and PasswordEncoder
-     * to verify the user's identity.
-     */
+    // --- Authentication Provider ---
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
-        // Spring is now ready to correctly retrieve the passwordEncoder bean here.
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-
-    /**
-     * Exposes the AuthenticationManager needed to perform the login action in the AuthController.
-     */
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
 }
+
