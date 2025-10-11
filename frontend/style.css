@@ -1,0 +1,231 @@
+/* V2.5: GCU Theme - FINAL CENTERING & MAX SCALE */
+
+:root {
+    --color-dark-bg: #111522;
+    --color-card-bg: #1c2132;
+    --color-text-light: #e0e0f0;
+    --color-primary-blue: #0099ff;
+    --color-secondary-blue: #007bff;
+    --color-text-muted: #8a99a8;
+    --color-error: #ff5757;
+}
+
+/* --- THE RELIABLE CENTERING FIX --- */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--color-dark-bg);
+    background-image: url('https://raw.githubusercontent.com/schulzeth/temp/main/circuit-bg-alt.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+
+    /* Center EVERYTHING */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* ensures full screen height */
+    margin: 0;
+    padding: 0;
+    color: var(--color-text-light);
+}
+
+/* Main wrapper holds logo + card, stacked vertically */
+.main-login-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px; /* spacing between logo and card */
+    text-align: center;
+
+}
+
+/* Remove big margins that push the logo off-center */
+.logo-header {
+    margin: 0;
+}
+
+.logo-header h1 {
+    font-family: 'Impact', sans-serif;
+    font-size: 8em;
+    color: white;
+    margin: 0;
+    line-height: 0.9;
+    letter-spacing: 7px;
+    text-shadow: 0 0 20px rgba(0, 153, 255, 0.8);
+}
+
+.logo-header p {
+    color: #0099ff;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-top: 15px;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+}
+
+/* --- LOGIN CONTAINER (Maximized Width & Spacing) --- */
+.login-container {
+    background: var(--color-card-bg);
+    padding: 70px 80px; /* Max internal padding */
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0, 153, 255, 0.3); /* Strongest glow */
+    border: 1px solid var(--color-primary-blue);
+    width: 95%;
+    max-width: 700px; /* MAXIMUM WIDER CARD */
+    margin: 0 auto;
+    transform: translateX(-68px); /* adjust -20 to -60px depending on how much you want */
+
+}
+
+.login-container h2 {
+    text-align: center;
+    color: var(--color-primary-blue);
+    margin-bottom: 40px; /* Max space below "LOGIN" title */
+    font-size: 2.4em; /* Max "LOGIN" title size */
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+.form-group {
+    margin-bottom: 35px; /* Max space between form groups */
+}
+
+label {
+    display: block;
+    margin-bottom: 12px; /* Max space below label */
+    font-weight: bold;
+    color: var(--color-text-muted);
+    font-size: 1.3em; /* Max labels size */
+    text-transform: uppercase;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 18px; /* Max inputs padding */
+    background-color: #252a42;
+    border: 1px solid #454d6a;
+    color: var(--color-text-light);
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1.2em; /* Max input text size */
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: var(--color-primary-blue);
+    box-shadow: 0 0 10px var(--color-primary-blue);
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 20px; /* Max button padding */
+    background: linear-gradient(180deg, var(--color-primary-blue) 0%, var(--color-secondary-blue) 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.6em; /* Max button text size */
+    font-weight: bold;
+    margin-top: 30px; /* Max space above button */
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    box-shadow: 0 8px 20px rgba(0, 153, 255, 0.5); /* Strongest button shadow */
+    transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+    opacity: 0.9;
+    box-shadow: 0 8px 25px rgba(0, 153, 255, 0.7);
+}
+
+.forgot-password {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.forgot-password a {
+    color: var(--color-primary-blue);
+    text-decoration: none;
+    font-size: 1.2em; /* Max link size */
+}
+
+/* Messages (styles remain the same) */
+.error-message, .success-message {
+    text-align: center;
+    margin-top: 25px;
+    font-weight: bold;
+}
+.error-message { color: var(--color-error); }
+.success-message { color: #4CAF50; }
+
+/* --- DASHBOARD SPECIFIC STYLES (Carried over) --- */
+.dashboard-layout body {
+    display: block;
+    min-height: 100vh;
+    background-image: url('https://raw.githubusercontent.com/schulzeth/temp/main/circuit-bg-alt.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.navbar {
+    background-color: var(--color-card-bg);
+    border-bottom: 2px solid var(--color-primary-blue);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.navbar-logo {
+    color: var(--color-primary-blue);
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.nav-links a {
+    color: var(--color-text-light);
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1em;
+    padding-bottom: 3px;
+    transition: color 0.2s, border-bottom 0.2s;
+}
+
+.nav-links a:hover {
+    color: var(--color-primary-blue);
+    border-bottom: 2px solid var(--color-primary-blue);
+}
+
+.dashboard-main {
+    padding: 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: calc(100vh - 70px);
+}
+
+.welcome-card {
+    background: var(--color-card-bg);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 153, 255, 0.1);
+    max-width: 800px;
+    width: 100%;
+    margin-top: 50px;
+}
+
+#logoutButton {
+    background: #f87d4a;
+    width: auto;
+    padding: 10px 20px;
+    margin-top: 30px;
+}
+#logoutButton:hover {
+    background: #d86938;
+}

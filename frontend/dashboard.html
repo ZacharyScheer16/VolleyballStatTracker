@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volleyball Tracker - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* New styles for the full-page dashboard layout */
+        body {
+            /* Reset body display for full-page layout */
+            display: block;
+            min-height: 100vh;
+        }
+
+        /* --- Navigation Bar --- */
+        .navbar {
+            background-color: var(--color-card-bg);
+            border-bottom: 2px solid var(--color-primary-blue);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .navbar-logo {
+            color: var(--color-primary-blue);
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: var(--color-text-light);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1em;
+            padding-bottom: 3px;
+            transition: color 0.2s, border-bottom 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-primary-blue);
+            border-bottom: 2px solid var(--color-primary-blue);
+        }
+
+        /* --- Dashboard Main Content Area --- */
+        .dashboard-main {
+            padding: 40px;
+            text-align: center;
+            /* Flex center content for initial welcome screen */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: calc(100vh - 70px); /* Adjust based on navbar height */
+        }
+
+        .welcome-card {
+            background: var(--color-card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 153, 255, 0.1);
+            max-width: 800px;
+            width: 100%;
+            margin-top: 50px;
+        }
+
+        .welcome-card h1 {
+            color: var(--color-primary-blue);
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        #logoutButton {
+            background: #f87d4a; /* Distinct color for logout */
+            width: auto;
+            padding: 10px 20px;
+            margin-top: 30px;
+        }
+        #logoutButton:hover {
+            background: #d86938;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-logo">VOLLEYBALL TRACKER</div>
+    <div class="nav-links">
+        <a href="#" class="active">Overall Stats</a>
+        <a href="#">Stat Leaders</a>
+        <a href="#">Player Management</a>
+        <a href="#">Team Editor</a>
+    </div>
+    <button id="logoutButton">Log Out</button>
+</div>
+
+<div class="dashboard-main">
+    <div class="welcome-card">
+        <h1>Welcome Back, Test User!</h1>
+        <p style="color: var(--color-text-light); font-size: 1.1em;">
+            This is your new dashboard. Use the navigation bar above to view and manage your team data. Our next step is to make the "Team Editor" link fully functional by building the backend logic.
+        </p>
+    </div>
+</div>
+
+<script>
+    document.getElementById('logoutButton').addEventListener('click', function() {
+        localStorage.removeItem('jwtToken');
+        window.location.href = 'index.html'; // Redirect to login page
+    });
+
+    // Basic check to ensure a token exists on the dashboard page
+    if (!localStorage.getItem('jwtToken')) {
+        window.location.href = 'index.html';
+    }
+</script>
+</body>
+</html>
