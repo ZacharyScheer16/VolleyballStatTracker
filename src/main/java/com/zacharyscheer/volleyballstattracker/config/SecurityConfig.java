@@ -1,12 +1,12 @@
 package com.zacharyscheer.volleyballstattracker.config;
 
-// IMPORTANT: Keep the uppercase 'Security' if that is your package name
 import com.zacharyscheer.volleyballstattracker.Security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -23,32 +23,31 @@ public class SecurityConfig {
         this.authenticationProvider = authenticationProvider;
     }
 
-    /**
-     * Defines the security filter chain using modern lambda syntax.
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Disable CSRF using lambda syntax
-                .csrf(csrf -> csrf.disable())
+                // 1. DISABLE CSRF
+                .csrf(AbstractHttpConfigurer::disable)
 
-                // 2. Define authorization rules using lambda syntax
+                // 2. DEFINE AUTHORIZATION RULES (FIXED)
                 .authorizeHttpRequests(auth -> auth
-                        // Allow access to /api/auth/** endpoints (login) WITHOUT a token.
+                        // Allow public access to /api/auth/** (login/register)
                         .requestMatchers("/api/auth/**").permitAll()
-                        // Require authentication for ALL other endpoints.
+
+                        // All other requests MUST be authenticated
                         .anyRequest().authenticated()
                 )
 
-                // 3. Configure session management: Stateless for JWT
-                .sessionManagement(session -> session
+
+                // 3. CONFIGURE SESSION MANAGEMENT
+                .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // 4. Set the custom authentication provider
+                // 4. CONFIGURE AUTHENTICATION PROVIDER
                 .authenticationProvider(authenticationProvider)
 
-                // 5. Add our custom JWT filter BEFORE Spring's default filter
+                // 5. ADD JWT FILTER
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
