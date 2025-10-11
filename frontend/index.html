@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volleyball Stat Tracker Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="main-login-view">
+    <div class="logo-header">
+        <h1>   GCU</h1>
+        <p>        MEN'S VOLLEYBALL</p>
+    </div>
+
+    <div class="login-container">
+        <h2>LOGIN</h2>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="email" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" id="loginButton">SIGN IN</button>
+
+            <div class="forgot-password">
+                <a href="#">FORGOT PASSWORD?</a>
+            </div>
+
+            <p id="message" class="error-message"></p>
+        </form>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
