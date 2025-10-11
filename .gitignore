@@ -1,8 +1,25 @@
+# ===============================================
+# ENVIRONMENT SECRETS (Crucial: Prevents credentials from being committed)
+# ===============================================
+.env
+# If you have other local files with secrets:
+.env.local
+.env.development.local
+
+# ===============================================
+# BUILD ARTIFACTS, DEPENDENCIES, and LOGS
+# ===============================================
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+*.log
+log/
+
+# ===============================================
+# IDE and EDITOR CONFIGURATION FILES
+# ===============================================
 
 ### STS ###
 .apt_generated
@@ -32,3 +49,8 @@ build/
 ### VS Code ###
 .vscode/
 
+# ===============================================
+# OS and Miscellaneous
+# ===============================================
+.DS_Store
+Thumbs.db

@@ -2,14 +2,16 @@ version: '3.8'
 
 services:
   db:
-    # ... (db service configuration remains the same) ...
     image: postgres:14-alpine
     container_name: volleyball-postgres
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Ninjazach7!1
       POSTGRES_DB: volleyball_db
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    # Change: Load variables from the .env file
+    env_file:
+      - ./.env
     ports:
       - "5433:5432"
     volumes:
@@ -21,14 +23,14 @@ services:
     ports:
       - "8080:8080"
     environment:
-      # Inject connection details
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/volleyball_db
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: Ninjazach7!1
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-
-      # <<<<<<<< NEW SECRETS INJECTION (Replace with your actual 256-bit key) >>>>>>>>
-      JWT_SECRET_KEY: 843566784DE16F54B0AD31C77E095E0AD31C77E095E0AD31C77E095E0AD31C77E095E0AD31C77E095E0A
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    # Change: Load variables from the .env file
+    env_file:
+      - ./.env
     depends_on:
       - db
 
