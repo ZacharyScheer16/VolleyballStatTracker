@@ -1,10 +1,8 @@
 version: '3.8'
 
 services:
-  # ------------------------------------
-  # 1. PostgreSQL Database Service
-  # ------------------------------------
   db:
+    # ... (db service configuration remains the same) ...
     image: postgres:14-alpine
     container_name: volleyball-postgres
     restart: always
@@ -15,25 +13,24 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      # This links the named volume below to the container's data directory
       - postgres_data:/var/lib/postgresql/data
 
   app:
-    build: . # Tells Docker Compose to use the Dockerfile in the current directory
+    build: .
     container_name: volleyball-stat-tracker
     ports:
-      - "8080:8080" # Maps host port 8080 to container port 8080
+      - "8080:8080"
     environment:
-      # Inject connection details directly into the container
+      # Inject connection details
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/volleyball_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: Ninjazach7!1
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-    depends_on:
-      - db # Ensures the 'db' container starts before the 'app' container
 
-# ------------------------------------
-# 3. Top-Level Volume Declaration
-# ------------------------------------
+      # <<<<<<<< NEW SECRETS INJECTION (Replace with your actual 256-bit key) >>>>>>>>
+      JWT_SECRET_KEY: 843566784DE16F54B0AD31C77E095E0AD31C77E095E0AD31C77E095E0AD31C77E095E0AD31C77E095E0A
+    depends_on:
+      - db
+
 volumes:
-  postgres_data: # Declares the named volume 'postgres_data'
+  postgres_data:
