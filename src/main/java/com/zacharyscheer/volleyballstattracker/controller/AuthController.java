@@ -4,6 +4,7 @@ import com.zacharyscheer.volleyballstattracker.Security.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder; // <-- NEW IMPORT
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
@@ -60,5 +61,20 @@ public class AuthController {
 
         // 4. Return the token to the client (the iPad/computer app)
         return ResponseEntity.ok(new AuthResponse(jwt));
+    }
+
+    // -------------------------------------------------------------
+    // TEMPORARY SECURED TEST ENDPOINT (Should be in a separate controller)
+    // -------------------------------------------------------------
+    /**
+     * GET /api/auth/secured
+     * This endpoint requires a valid JWT token. It tests the JWT filter chain.
+     */
+    @GetMapping("/secured")
+    public ResponseEntity<String> securedEndpoint() {
+        // If execution reaches this point, the user is authenticated by the JWT filter.
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        return ResponseEntity.ok("SUCCESS! Hello, " + username + "! Your security filter is working perfectly.");
     }
 }
