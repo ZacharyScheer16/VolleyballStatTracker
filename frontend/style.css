@@ -1,16 +1,16 @@
-/* V2.5: GCU Theme - FINAL CENTERING & MAX SCALE */
+/* V2.6: GCU THEME - CALM PURPLE + CENTERED LOGO FIX */
 
 :root {
-    --color-dark-bg: #111522;
-    --color-card-bg: #1c2132;
+    --color-dark-bg: #3c2c75;          /* deeper purple background */
+    --color-card-bg: #1e1b2f;          /* darker violet card background */
     --color-text-light: #e0e0f0;
-    --color-primary-blue: #0099ff;
-    --color-secondary-blue: #007bff;
-    --color-text-muted: #8a99a8;
+    --color-primary-blue: #806bff;     /* calm lavender accent */
+    --color-secondary-blue: #5a47d6;   /* complementary deep purple-blue */
+    --color-text-muted: #a39acb;       /* muted purple-gray for labels */
     --color-error: #ff5757;
 }
 
-/* --- THE RELIABLE CENTERING FIX --- */
+/* --- RELIABLE CENTERING --- */
 body {
     font-family: 'Arial', sans-serif;
     background-color: var(--color-dark-bg);
@@ -19,97 +19,93 @@ body {
     background-position: center;
     background-attachment: fixed;
 
-    /* Center EVERYTHING */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* ensures full screen height */
+    height: 100vh;
     margin: 0;
     padding: 0;
     color: var(--color-text-light);
 }
 
-/* Main wrapper holds logo + card, stacked vertically */
+/* --- MAIN STRUCTURE --- */
 .main-login-view {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 40px; /* spacing between logo and card */
+    gap: 35px;
     text-align: center;
-
 }
 
-/* Remove big margins that push the logo off-center */
 .logo-header {
     margin: 0;
 }
 
 .logo-header h1 {
     font-family: 'Impact', sans-serif;
-    font-size: 8em;
+    font-size: 6em; /* smaller to fit frame */
     color: white;
     margin: 0;
     line-height: 0.9;
-    letter-spacing: 7px;
-    text-shadow: 0 0 20px rgba(0, 153, 255, 0.8);
+    letter-spacing: 6px;
+    text-shadow: 0 0 25px rgba(128, 107, 255, 0.8);
 }
 
 .logo-header p {
-    color: #0099ff;
-    font-size: 1.8em;
+    color: var(--color-primary-blue);
+    font-size: 1.6em;
     font-weight: bold;
-    margin-top: 15px;
-    letter-spacing: 8px;
+    margin-top: 10px;
+    letter-spacing: 6px;
     text-transform: uppercase;
 }
 
-/* --- LOGIN CONTAINER (Maximized Width & Spacing) --- */
+/* --- LOGIN CARD --- */
 .login-container {
     background: var(--color-card-bg);
-    padding: 70px 80px; /* Max internal padding */
+    padding: 70px 80px;
     border-radius: 12px;
-    box-shadow: 0 0 40px rgba(0, 153, 255, 0.3); /* Strongest glow */
+    box-shadow: 0 0 40px rgba(128, 107, 255, 0.3);
     border: 1px solid var(--color-primary-blue);
     width: 95%;
-    max-width: 700px; /* MAXIMUM WIDER CARD */
+    max-width: 700px;
     margin: 0 auto;
-    transform: translateX(-68px); /* adjust -20 to -60px depending on how much you want */
-
+    transform: translateX(-65px);
 }
 
 .login-container h2 {
     text-align: center;
     color: var(--color-primary-blue);
-    margin-bottom: 40px; /* Max space below "LOGIN" title */
-    font-size: 2.4em; /* Max "LOGIN" title size */
+    margin-bottom: 40px;
+    font-size: 2.3em;
     text-transform: uppercase;
     letter-spacing: 4px;
 }
 
 .form-group {
-    margin-bottom: 35px; /* Max space between form groups */
+    margin-bottom: 35px;
 }
 
 label {
     display: block;
-    margin-bottom: 12px; /* Max space below label */
+    margin-bottom: 12px;
     font-weight: bold;
     color: var(--color-text-muted);
-    font-size: 1.3em; /* Max labels size */
+    font-size: 1.2em;
     text-transform: uppercase;
 }
 
 input[type="email"],
 input[type="password"] {
     width: 100%;
-    padding: 18px; /* Max inputs padding */
-    background-color: #252a42;
-    border: 1px solid #454d6a;
+    padding: 18px;
+    background-color: #292446;
+    border: 1px solid #4d467a;
     color: var(--color-text-light);
     border-radius: 8px;
     box-sizing: border-box;
-    font-size: 1.2em; /* Max input text size */
+    font-size: 1.1em;
 }
 
 input[type="email"]:focus,
@@ -119,28 +115,30 @@ input[type="password"]:focus {
     outline: none;
 }
 
+/* --- BUTTON --- */
 button {
     width: 100%;
-    padding: 20px; /* Max button padding */
+    padding: 20px;
     background: linear-gradient(180deg, var(--color-primary-blue) 0%, var(--color-secondary-blue) 100%);
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1.6em; /* Max button text size */
+    font-size: 1.5em;
     font-weight: bold;
-    margin-top: 30px; /* Max space above button */
+    margin-top: 30px;
     text-transform: uppercase;
     letter-spacing: 3px;
-    box-shadow: 0 8px 20px rgba(0, 153, 255, 0.5); /* Strongest button shadow */
+    box-shadow: 0 8px 20px rgba(128, 107, 255, 0.5);
     transition: all 0.2s ease-in-out;
 }
 
 button:hover {
-    opacity: 0.9;
-    box-shadow: 0 8px 25px rgba(0, 153, 255, 0.7);
+    opacity: 0.95;
+    box-shadow: 0 8px 25px rgba(128, 107, 255, 0.7);
 }
 
+/* --- LINKS --- */
 .forgot-password {
     text-align: center;
     margin-top: 30px;
@@ -149,19 +147,19 @@ button:hover {
 .forgot-password a {
     color: var(--color-primary-blue);
     text-decoration: none;
-    font-size: 1.2em; /* Max link size */
+    font-size: 1.1em;
 }
 
-/* Messages (styles remain the same) */
+/* --- MESSAGES --- */
 .error-message, .success-message {
     text-align: center;
     margin-top: 25px;
     font-weight: bold;
 }
 .error-message { color: var(--color-error); }
-.success-message { color: #4CAF50; }
+.success-message { color: #63ff8f; }
 
-/* --- DASHBOARD SPECIFIC STYLES (Carried over) --- */
+/* --- DASHBOARD --- */
 .dashboard-layout body {
     display: block;
     min-height: 100vh;
@@ -214,18 +212,18 @@ button:hover {
     background: var(--color-card-bg);
     padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0, 153, 255, 0.1);
+    box-shadow: 0 0 20px rgba(128, 107, 255, 0.15);
     max-width: 800px;
     width: 100%;
     margin-top: 50px;
 }
 
 #logoutButton {
-    background: #f87d4a;
+    background: #b469ff;
     width: auto;
     padding: 10px 20px;
     margin-top: 30px;
 }
 #logoutButton:hover {
-    background: #d86938;
+    background: #a35cff;
 }
