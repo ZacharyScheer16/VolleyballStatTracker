@@ -1,6 +1,7 @@
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
     event.preventDefault(); // Prevent the default form submission
 
+    // Note: We use the variable 'username' here because that's the ID of the input field
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     const messageElement = document.getElementById('message');
@@ -17,7 +18,8 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username: username,
+                // CRITICAL FIX: The backend DTO expects 'email', not 'username'.
+                email: username,
                 password: password
             })
         });
