@@ -1,5 +1,6 @@
 package com.zacharyscheer.volleyballstattracker.config;
 
+import com.zacharyscheer.volleyballstattracker.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class ApplicationConfig {
+
+    private final UserRepository userRepository;
+
+    public ApplicationConfig(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // --- Core Security Beans ---
 
@@ -30,24 +37,10 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> {
-            if ("testuser@volleyball.com".equals(username)) {
-                // When loading the user for ANY purpose (Login OR JWT validation),
-                // we MUST provide the *encoded* password so the login provider can compare it.
-                // We use passwordEncoder().encode("password") to generate the encoded hash every time.
-                return org.springframework.security.core.userdetails.User
-                        .withUsername("testuser@volleyball.com")
-                        // REVERTED FIX: The password must be encoded for the login to work!
-                        .password(passwordEncoder().encode("password"))
-                        .authorities("USER")
-                        .accountExpired(false)
-                        .accountLocked(false)
-                        .credentialsExpired(false)
-                        .disabled(false)
-                        .build();
-            }
-            throw new UsernameNotFoundException("User not found: " + username);
-        };
+        // Use the injected UserRepository to find the User entity by email/username
+        return username -> userRepository.findByEmail(username)
+                // If not found, throw the standard Spring Security exception
+                .orElseThrow(() -> new UsernameNotFoundException("User not found in database: " + username));
     }
 
     // --- Authentication Provider ---
