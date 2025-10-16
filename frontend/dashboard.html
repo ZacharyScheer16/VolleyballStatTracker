@@ -6,7 +6,8 @@
     <title>Volleyball Tracker - Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* New styles for the full-page dashboard layout */
+        /* (Keep the existing <style> block here) */
+        /* ... CSS styles from your previous post ... */
         body {
             /* Reset body display for full-page layout */
             display: block;
@@ -90,29 +91,20 @@
         <a href="#">Stat Leaders</a>
         <a href="#">Player Management</a>
         <a href="#">Team Editor</a>
+        <a href="#" id="profileNav">User Profile</a>
     </div>
     <button id="logoutButton">Log Out</button>
 </div>
 
 <div class="dashboard-main">
     <div class="welcome-card">
-        <h1>Welcome Back, Test User!</h1>
+        <h1>Loading Profile...</h1>
         <p style="color: var(--color-text-light); font-size: 1.1em;">
-            This is your new dashboard. Use the navigation bar above to view and manage your team data. Our next step is to make the "Team Editor" link fully functional by building the backend logic.
+            This is your new dashboard. Use the navigation bar above to view and manage your team data.
         </p>
     </div>
 </div>
 
-<script>
-    document.getElementById('logoutButton').addEventListener('click', function() {
-        localStorage.removeItem('jwtToken');
-        window.location.href = 'index.html'; // Redirect to login page
-    });
-
-    // Basic check to ensure a token exists on the dashboard page
-    if (!localStorage.getItem('jwtToken')) {
-        window.location.href = 'index.html';
-    }
-</script>
+<script src="dashboard.js"></script>
 </body>
 </html>
