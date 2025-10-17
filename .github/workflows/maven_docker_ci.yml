@@ -11,6 +11,7 @@ jobs:
     name: Build, Test, and Push Docker Image
     runs-on: ubuntu-latest
 
+    # Correctly defined 'services' block
     services:
       postgres:
         image: postgres:13
@@ -20,63 +21,57 @@ jobs:
           POSTGRES_PASSWORD: Ninjazach7!1
         ports:
           - 5432:5432
-        # FIX APPLIED: Using '>-' to remove trailing newline
         options: >-
           --health-cmd "pg_isready -U postgres"
           --health-interval=5s
           --health-timeout=5s
           --health-retries=5
 
+    # Correctly defined 'steps' block (at the same level as 'services')
     steps:
       - name: 🔄Checkout Code
         uses: actions/checkout@v4
 
-      - name:  Set up JDK 21
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
 
-      # 1. ROBUST WAIT STEP
-      - name: Wait for PostgreSQL to be reachable
-        id: wait_db
+      # ROBUST WAIT/DIAGNOSTICS STEP
+      - name: Wait for PostgreSQL service to start
         run: |
-          # Install postgresql client utility for pg_isready
+          set -euo pipefail
           sudo apt-get update -y
           sudo apt-get install -y postgresql-client
-          
-          # Wait loop
-          for i in {1..30}; do
-            if pg_isready -h localhost -p 5432 -U postgres; then
+          echo "Waiting for Postgres on localhost:5432 (up to 60s)..."
+          for i in {1..60}; do
+            # Check readiness (exit status: 0=ready, 1=not ready, 2=error/unreachable)
+            pg_isready -h localhost -p 5432 -U postgres -d volleyball_db -q
+            STATUS=$?
+            echo "pg_isready status=$STATUS (attempt $i)"
+            if [ $STATUS -eq 0 ]; then
               echo "PostgreSQL ready"
               exit 0
             fi
             sleep 1
           done
-          echo "Postgres did not come up" >&2
-          exit 1
-
-      # 2. DIAGNOSTIC STEP (Runs only if the wait step fails)
-      - name: Debug Postgres container logs
-        if: failure()
-        run: |
+          
+          # DIAGNOSTICS ON TIMEOUT
+          echo "Postgres did not become ready in time" >&2
           echo "==== docker ps -a ===="
           docker ps -a --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}"
-
-          # Find the Postgres container (using filter by image ancestor)
           CONTAINER=$(docker ps -a --filter ancestor=postgres:13 --format '{{.ID}}' | head -n1)
-          
           if [ -n "$CONTAINER" ]; then
-            echo "Found Postgres container: $CONTAINER"
-            echo "==== docker logs (last 200 lines) ===="
-            # The '|| true' ensures this command doesn't fail the step if logs fail
-            docker logs --tail 200 "$CONTAINER" || true
+            echo "==== docker logs (last 500 lines) for $CONTAINER ===="
+            docker logs --tail 500 "$CONTAINER" || true
           else
             echo "No postgres container found"
           fi
+          exit 1 # Fail the step if timeout reached
 
-      # 3. BUILD & TEST STEP (Runs only if previous steps succeed)
+      # BUILD & TEST STEP (Runs only if DB wait succeeds)
       - name: Build and Test JAR
         run: mvn -B package -Dspring-boot.run.profiles=test --file pom.xml
 
@@ -95,7 +90,7 @@ jobs:
             type=sha,prefix=,suffix=,format=short
             type=raw,value=latest,enable={{is_default_branch}}
 
-      # 4. DOCKER BUILD & PUSH STEP
+      # DOCKER BUILD & PUSH STEP
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
