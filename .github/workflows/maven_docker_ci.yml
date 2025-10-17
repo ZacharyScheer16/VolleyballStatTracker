@@ -11,7 +11,7 @@ jobs:
     name: Build, Test, and Push Docker Image
     runs-on: ubuntu-latest
 
-    # 🌟 NEW: Define the PostgreSQL service for integration tests
+    # 🌟 FIXED: Replaced '>' with '>-' (folded block with chomp) to remove trailing newline
     services:
       postgres:
         image: postgres:13
@@ -22,12 +22,12 @@ jobs:
           POSTGRES_PASSWORD: Ninjazach7!1
         ports:
           - 5432:5432
-        # Simple health check to ensure the container is ready
-        options: >
-          --health-cmd pg_isready
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 5
+        # FIX APPLIED HERE: Use '>-' and recommended flags for clarity
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - name: 🔄Checkout Code
@@ -40,13 +40,21 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      #  NEW: Wait briefly for the database to fully initialize
-      - name: Wait for PostgreSQL service to start
-        run: sleep 5
-
+      # 🚀 IMPROVED: Robust wait step using netcat (nc) to ensure the port is open
+      - name: Wait for PostgreSQL to be reachable
+        run: |
+          sudo apt-get update && sudo apt-get install -y netcat
+          for i in {1..30}; do
+            if nc -z localhost 5432; then
+              echo "PostgreSQL listening"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Postgres did not come up" >&2
+          exit 1
       # 1. BUILD & TEST STEP (Now connects to the 'postgres' service)
       - name: Build and Test JAR
-        # -Dspring-boot.run.profiles=test is kept to load application-test.properties if it exists
         run: mvn -B package -Dspring-boot.run.profiles=test --file pom.xml
 
       - name: Log in to Docker Hub
