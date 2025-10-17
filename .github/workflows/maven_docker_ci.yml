@@ -48,7 +48,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          # Only push the image when merging/pushing to the master branch
-          push: ${{ github.ref == 'refs/heads/master' }}
-          tags: ${{ secrets.DOCKER_USERNAME }}/volleyball-stat-tracker:latesttracker:latest
+            context: .
+            push: ${{ github.ref == 'refs/heads/master' }}
+            # ✅ CORRECTED LINE: Ensure the tag format is clean
+            tags: ${{ secrets.DOCKER_USERNAME }}/volleyball-stat-tracker:latest
