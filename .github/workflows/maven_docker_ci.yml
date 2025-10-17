@@ -11,7 +11,7 @@ jobs:
     name: Build, Test, and Push Docker Image
     runs-on: ubuntu-latest
 
-    # CORRECT INDENTATION LEVEL FOR SERVICES
+    # Correctly defined 'services' block
     services:
       postgres:
         image: postgres:13
@@ -27,7 +27,7 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-    # CORRECT INDENTATION LEVEL FOR STEPS (Sibling of 'services')
+    # Correctly defined 'steps' block (at the same level as 'services')
     steps:
       - name: 🔄Checkout Code
         uses: actions/checkout@v4
@@ -39,20 +39,18 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # ROBUST WAIT/DIAGNOSTICS STEP (Integrated Debugging on failure)
+      # ROBUST WAIT/DIAGNOSTICS STEP
       - name: Wait for PostgreSQL service to start
         run: |
           set -euo pipefail
           sudo apt-get update -y
           sudo apt-get install -y postgresql-client
           echo "Waiting for Postgres on localhost:5432 (up to 60s)..."
-          
           for i in {1..60}; do
-            # Use -q for quiet, check the exit status
+            # Check readiness (exit status: 0=ready, 1=not ready, 2=error/unreachable)
             pg_isready -h localhost -p 5432 -U postgres -d volleyball_db -q
             STATUS=$?
             echo "pg_isready status=$STATUS (attempt $i)"
-          
             if [ $STATUS -eq 0 ]; then
               echo "PostgreSQL ready"
               exit 0
@@ -60,7 +58,7 @@ jobs:
             sleep 1
           done
           
-          # DIAGNOSTICS ON TIMEOUT FAILURE (60 seconds elapsed)
+          # DIAGNOSTICS ON TIMEOUT
           echo "Postgres did not become ready in time" >&2
           echo "==== docker ps -a ===="
           docker ps -a --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}"
@@ -71,9 +69,9 @@ jobs:
           else
             echo "No postgres container found"
           fi
-          exit 1 # Fail the job
+          exit 1 # Fail the step if timeout reached
 
-      # BUILD & TEST STEP
+      # BUILD & TEST STEP (Runs only if DB wait succeeds)
       - name: Build and Test JAR
         run: mvn -B package -Dspring-boot.run.profiles=test --file pom.xml
 
@@ -97,6 +95,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.ref == 'refs/heads/master' }}
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
