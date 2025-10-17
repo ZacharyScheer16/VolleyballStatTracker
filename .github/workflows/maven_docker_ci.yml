@@ -1,5 +1,6 @@
 name: maven_docker_ci.yml
 
+
 on:
   push:
     branches: [ "master" ]
@@ -13,7 +14,7 @@ jobs:
     name: Build, Test, and Push Docker Image
     runs-on: ubuntu-latest
 
-    # *** NOTICE: The 'services: postgres:' block is completely removed! ***
+    # *** NO 'services: postgres:' BLOCK IS NEEDED ***
 
     steps:
       # 1. SETUP AND CHECKOUT
@@ -27,18 +28,20 @@ jobs:
           distribution: 'temurin'
           cache: maven # Cache Maven dependencies for faster builds
 
-      # *** NOTICE: The 'Wait for PostgreSQL service to start' step is removed! ***
+      # 2. RUN PURE UNIT TESTS (FAST)
+      # Compiles and runs tests, but skips packaging/lifecycle steps after the test phase.
+      - name: ✅ Run Pure Unit Tests
+        run: mvn -B test --file pom.xml
 
-      # 2. BUILD AND TEST
-      # This step now runs tests using the fast H2 in-memory database
-      - name: Build and Run Tests
+      # 3. RUN INTEGRATION TESTS (SPRING CONTEXT/H2)
+      # Packages the application and runs Spring tests using the 'test' profile (H2).
+      - name: ⚙️ Run Integration Tests (H2 Context Load)
         run: mvn -B package -Dspring-boot.run.profiles=test --file pom.xml
 
-      # 3. DOCKER BUILD AND PUSH (Continuous Delivery part)
+      # 4. DOCKER BUILD AND PUSH (Continuous Delivery)
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          # Use secrets for security
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
@@ -48,5 +51,4 @@ jobs:
           context: .
           # Only push the image when merging/pushing to the master branch
           push: ${{ github.ref == 'refs/heads/master' }}
-          # Use your correct Docker Hub username and image name
-          tags: ${{ secrets.DOCKER_USERNAME }}/volleyball-stat-tracker:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/volleyball-stat-tracker:latesttracker:latest
