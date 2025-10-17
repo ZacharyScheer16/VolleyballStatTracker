@@ -25,7 +25,7 @@ jobs:
 
       # 1. BUILD & TEST STEP (Runs Maven build which executes unit tests)
       - name: Build and Test JAR
-        run: mvn -B package -DskipDockerBuild=true --file pom.xml
+        run: mvn -B package -Dspring-boot.run.profiles=test --file pom.xml
         # We add -DskipDockerBuild=true here in case you have a docker build step in your pom
 
       - name: Log in to Docker Hub
