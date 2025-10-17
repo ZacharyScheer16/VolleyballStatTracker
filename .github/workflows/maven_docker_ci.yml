@@ -1,9 +1,9 @@
 name: maven_docker_ci.yml
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
   workflow_dispatch:
 
 jobs:
@@ -11,18 +11,16 @@ jobs:
     name: Build, Test, and Push Docker Image
     runs-on: ubuntu-latest
 
-    # 🌟 FIXED: Replaced '>' with '>-' (folded block with chomp) to remove trailing newline
     services:
       postgres:
         image: postgres:13
         env:
-          # CRUCIAL: These credentials MUST match your application.properties for CI
           POSTGRES_DB: volleyball_db
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: Ninjazach7!1
         ports:
           - 5432:5432
-        # FIX APPLIED HERE: Use '>-' and recommended flags for clarity
+        # FIX APPLIED: Using '>-' to remove trailing newline
         options: >-
           --health-cmd "pg_isready -U postgres"
           --health-interval=5s
@@ -40,19 +38,19 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # 🚀 IMPROVED: Robust wait step using netcat (nc) to ensure the port is open
+      # 🚀 IMPROVED: Robust wait step using pg_isready
       - name: Wait for PostgreSQL to be reachable
         run: |
-          sudo apt-get update && sudo apt-get install -y netcat
           for i in {1..30}; do
-            if nc -z localhost 5432; then
-              echo "PostgreSQL listening"
+            if pg_isready -h localhost -p 5432 -U postgres; then
+              echo "PostgreSQL ready"
               exit 0
             fi
             sleep 1
           done
           echo "Postgres did not come up" >&2
           exit 1
+
       # 1. BUILD & TEST STEP (Now connects to the 'postgres' service)
       - name: Build and Test JAR
         run: mvn -B package -Dspring-boot.run.profiles=test --file pom.xml
