@@ -11,7 +11,24 @@ jobs:
     name: Build, Test, and Push Docker Image
     runs-on: ubuntu-latest
 
-    # Only push to registry on pushes to the 'main' branch
+    # 🌟 NEW: Define the PostgreSQL service for integration tests
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          # CRUCIAL: These credentials MUST match your application.properties for CI
+          POSTGRES_DB: volleyball_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: Ninjazach7!1
+        ports:
+          - 5432:5432
+        # Simple health check to ensure the container is ready
+        options: >
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: 🔄Checkout Code
         uses: actions/checkout@v4
@@ -23,16 +40,21 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # 1. BUILD & TEST STEP (Runs Maven build which executes unit tests)
+      #  NEW: Wait briefly for the database to fully initialize
+      - name: Wait for PostgreSQL service to start
+        run: sleep 5
+
+      # 1. BUILD & TEST STEP (Now connects to the 'postgres' service)
       - name: Build and Test JAR
+        # -Dspring-boot.run.profiles=test is kept to load application-test.properties if it exists
         run: mvn -B package -Dspring-boot.run.profiles=test --file pom.xml
-        # We add -DskipDockerBuild=true here in case you have a docker build step in your pom
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }} #  Using password as requested ⚠
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name:  Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@v5
@@ -42,13 +64,11 @@ jobs:
             type=sha,prefix=,suffix=,format=short
             type=raw,value=latest,enable={{is_default_branch}}
 
-      # 2. DOCKER BUILD & PUSH STEP (Puts the locally built JAR into the image)
+      # 2. DOCKER BUILD & PUSH STEP
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.ref == 'refs/heads/main' }} # Only pushes when on main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-
