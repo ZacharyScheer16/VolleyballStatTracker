@@ -1,0 +1,54 @@
+name: maven_docker_ci.yml
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build_test_push:
+    name: Build, Test, and Push Docker Image
+    runs-on: ubuntu-latest
+
+    # Only push to registry on pushes to the 'main' branch
+    steps:
+      - name: 🔄Checkout Code
+        uses: actions/checkout@v4
+
+      - name:  Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      # 1. BUILD & TEST STEP (Runs Maven build which executes unit tests)
+      - name: Build and Test JAR
+        run: mvn -B package -DskipDockerBuild=true --file pom.xml
+        # We add -DskipDockerBuild=true here in case you have a docker build step in your pom
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }} #  Using password as requested ⚠
+      - name:  Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/volleyball-stat-tracker
+          tags: |
+            type=sha,prefix=,suffix=,format=short
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      # 2. DOCKER BUILD & PUSH STEP (Puts the locally built JAR into the image)
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.ref == 'refs/heads/main' }} # Only pushes when on main branch
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+
