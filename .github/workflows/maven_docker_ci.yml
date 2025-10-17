@@ -38,12 +38,15 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # ✅ RECOMMENDED FIX: Install postgresql-client and use pg_isready
+      # 1. ROBUST WAIT STEP
       - name: Wait for PostgreSQL to be reachable
+        id: wait_db
         run: |
+          # Install postgresql client utility for pg_isready
           sudo apt-get update -y
           sudo apt-get install -y postgresql-client
           
+          # Wait loop
           for i in {1..30}; do
             if pg_isready -h localhost -p 5432 -U postgres; then
               echo "PostgreSQL ready"
@@ -54,7 +57,26 @@ jobs:
           echo "Postgres did not come up" >&2
           exit 1
 
-      # 1. BUILD & TEST STEP (Now connects to the 'postgres' service)
+      # 2. DIAGNOSTIC STEP (Runs only if the wait step fails)
+      - name: Debug Postgres container logs
+        if: failure()
+        run: |
+          echo "==== docker ps -a ===="
+          docker ps -a --format "table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}"
+
+          # Find the Postgres container (using filter by image ancestor)
+          CONTAINER=$(docker ps -a --filter ancestor=postgres:13 --format '{{.ID}}' | head -n1)
+          
+          if [ -n "$CONTAINER" ]; then
+            echo "Found Postgres container: $CONTAINER"
+            echo "==== docker logs (last 200 lines) ===="
+            # The '|| true' ensures this command doesn't fail the step if logs fail
+            docker logs --tail 200 "$CONTAINER" || true
+          else
+            echo "No postgres container found"
+          fi
+
+      # 3. BUILD & TEST STEP (Runs only if previous steps succeed)
       - name: Build and Test JAR
         run: mvn -B package -Dspring-boot.run.profiles=test --file pom.xml
 
@@ -73,7 +95,7 @@ jobs:
             type=sha,prefix=,suffix=,format=short
             type=raw,value=latest,enable={{is_default_branch}}
 
-      # 2. DOCKER BUILD & PUSH STEP
+      # 4. DOCKER BUILD & PUSH STEP
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
