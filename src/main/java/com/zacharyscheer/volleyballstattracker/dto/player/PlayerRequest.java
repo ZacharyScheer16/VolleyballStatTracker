@@ -3,6 +3,13 @@ package com.zacharyscheer.volleyballstattracker.dto.player;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.*;
+
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class PlayerRequest {
     @NotBlank(message = "Player name is required.")
