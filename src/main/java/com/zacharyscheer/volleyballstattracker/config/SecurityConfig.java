@@ -4,6 +4,7 @@ import com.zacharyscheer.volleyballstattracker.Security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod; // <-- IMPORT ADDED
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -45,6 +46,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Allow access to the authentication controller endpoints (like /api/auth/login)
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        // NEW RULE: Allow unauthenticated POST requests to create a new player
+                        .requestMatchers(HttpMethod.POST, "/api/player").permitAll()
+
+                        // NEW RULE: Allow unauthenticated GET requests to view players (e.g., for roster view)
+                        .requestMatchers(HttpMethod.GET, "/api/player/**").permitAll()
+
                         // Require authentication for all other endpoints (e.g., /api/matches, /api/players)
                         .anyRequest().authenticated()
                 )
