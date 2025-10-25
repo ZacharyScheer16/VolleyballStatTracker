@@ -5,11 +5,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
+@Entity
 @Table(name = "Players")
 public class Player {
 
