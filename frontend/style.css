@@ -1,5 +1,6 @@
-/* V2.6: GCU THEME - CALM PURPLE + CENTERED LOGO FIX */
+/* V2.7: GCU THEME - CALM PURPLE + FULL GLOBAL FIX */
 
+/* --- Theme Variables --- */
 :root {
     --color-dark-bg: #3c2c75;          /* deeper purple background */
     --color-card-bg: #1e1b2f;          /* darker violet card background */
@@ -8,167 +9,51 @@
     --color-secondary-blue: #5a47d6;   /* complementary deep purple-blue */
     --color-text-muted: #a39acb;       /* muted purple-gray for labels */
     --color-error: #ff5757;
+    --color-edit-btn: #4169E1;         /* Royal Blue for Edit */
+    --color-delete-btn: #CC3333;       /* Crimson Red for Delete */
 }
 
-/* --- RELIABLE CENTERING --- */
-body {
-    font-family: 'Arial', sans-serif;
+/* 1. 🚀 GUARANTEED BACKGROUND FIX: Target HTML and BODY */
+html {
     background-color: var(--color-dark-bg);
     background-image: url('https://raw.githubusercontent.com/schulzeth/temp/main/circuit-bg-alt.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+    height: 100%;
+}
 
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: transparent; /* Allows HTML background to show */
+    color: var(--color-text-light);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* 2. Global Theme Class (Redundant but kept for safety/flexibility) */
+.gcu-theme {
+    min-height: 100vh;
+}
+
+/* --- Layouts --- */
+.centered-view { /* Only for login page body */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
-    padding: 0;
-    color: var(--color-text-light);
 }
 
-/* --- MAIN STRUCTURE --- */
-.main-login-view {
+.dashboard-main {
+    padding: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 35px;
-    text-align: center;
+    min-height: calc(100vh - 70px);
 }
 
-.logo-header {
-    margin: 0;
-}
-
-.logo-header h1 {
-    font-family: 'Impact', sans-serif;
-    font-size: 6em; /* smaller to fit frame */
-    color: white;
-    margin: 0;
-    line-height: 0.9;
-    letter-spacing: 6px;
-    text-shadow: 0 0 25px rgba(128, 107, 255, 0.8);
-}
-
-.logo-header p {
-    color: var(--color-primary-blue);
-    font-size: 1.6em;
-    font-weight: bold;
-    margin-top: 10px;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-}
-
-/* --- LOGIN CARD --- */
-.login-container {
-    background: var(--color-card-bg);
-    padding: 70px 80px;
-    border-radius: 12px;
-    box-shadow: 0 0 40px rgba(128, 107, 255, 0.3);
-    border: 1px solid var(--color-primary-blue);
-    width: 95%;
-    max-width: 700px;
-    margin: 0 auto;
-    transform: translateX(-65px);
-}
-
-.login-container h2 {
-    text-align: center;
-    color: var(--color-primary-blue);
-    margin-bottom: 40px;
-    font-size: 2.3em;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-}
-
-.form-group {
-    margin-bottom: 35px;
-}
-
-label {
-    display: block;
-    margin-bottom: 12px;
-    font-weight: bold;
-    color: var(--color-text-muted);
-    font-size: 1.2em;
-    text-transform: uppercase;
-}
-
-input[type="email"],
-input[type="password"] {
-    width: 100%;
-    padding: 18px;
-    background-color: #292446;
-    border: 1px solid #4d467a;
-    color: var(--color-text-light);
-    border-radius: 8px;
-    box-sizing: border-box;
-    font-size: 1.1em;
-}
-
-input[type="email"]:focus,
-input[type="password"]:focus {
-    border-color: var(--color-primary-blue);
-    box-shadow: 0 0 10px var(--color-primary-blue);
-    outline: none;
-}
-
-/* --- BUTTON --- */
-button {
-    width: 100%;
-    padding: 20px;
-    background: linear-gradient(180deg, var(--color-primary-blue) 0%, var(--color-secondary-blue) 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1.5em;
-    font-weight: bold;
-    margin-top: 30px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    box-shadow: 0 8px 20px rgba(128, 107, 255, 0.5);
-    transition: all 0.2s ease-in-out;
-}
-
-button:hover {
-    opacity: 0.95;
-    box-shadow: 0 8px 25px rgba(128, 107, 255, 0.7);
-}
-
-/* --- LINKS --- */
-.forgot-password {
-    text-align: center;
-    margin-top: 30px;
-}
-
-.forgot-password a {
-    color: var(--color-primary-blue);
-    text-decoration: none;
-    font-size: 1.1em;
-}
-
-/* --- MESSAGES --- */
-.error-message, .success-message {
-    text-align: center;
-    margin-top: 25px;
-    font-weight: bold;
-}
-.error-message { color: var(--color-error); }
-.success-message { color: #63ff8f; }
-
-/* --- DASHBOARD --- */
-.dashboard-layout body {
-    display: block;
-    min-height: 100vh;
-    background-image: url('https://raw.githubusercontent.com/schulzeth/temp/main/circuit-bg-alt.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-}
-
+/* --- Navbar (Top Navigation) --- */
 .navbar {
     background-color: var(--color-card-bg);
     border-bottom: 2px solid var(--color-primary-blue);
@@ -194,36 +79,148 @@ button:hover {
     transition: color 0.2s, border-bottom 0.2s;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-links a.active {
     color: var(--color-primary-blue);
     border-bottom: 2px solid var(--color-primary-blue);
 }
 
-.dashboard-main {
-    padding: 40px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: calc(100vh - 70px);
-}
-
+/* --- General Components --- */
 .welcome-card {
     background: var(--color-card-bg);
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(128, 107, 255, 0.15);
-    max-width: 800px;
     width: 100%;
-    margin-top: 50px;
+}
+
+h1 {
+    color: var(--color-text-light);
+}
+
+/* --- Roster Header (H1 and Add Button) --- */
+.roster-header-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.roster-header-container h1 {
+    color: var(--color-primary-blue);
+    margin: 0;
+    font-size: 2.8em;
+}
+
+/* --- BUTTONS (General) --- */
+button {
+    background: linear-gradient(180deg, var(--color-primary-blue) 0%, var(--color-secondary-blue) 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 20px;
+    transition: all 0.2s ease-in-out;
+}
+button:hover {
+    opacity: 0.95;
+}
+
+#addPlayerButton {
+    width: auto;
+    padding: 12px 25px;
+    font-size: 1.2em;
+    margin: 0;
 }
 
 #logoutButton {
     background: #b469ff;
     width: auto;
     padding: 10px 20px;
-    margin-top: 30px;
+    font-size: 1em; /* smaller than primary buttons */
 }
 #logoutButton:hover {
     background: #a35cff;
+}
+
+/* --- TABLE STYLES (For Player Management) --- */
+.roster-table-card {
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 20px 20px 20px;
+}
+
+#rosterTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: var(--color-text-light);
+    text-align: left; /* Default text align */
+}
+
+#rosterTable thead tr {
+    border-bottom: 2px solid var(--color-primary-blue);
+}
+
+#rosterTable th {
+    padding: 15px 10px;
+    background-color: var(--color-card-bg);
+    color: var(--color-primary-blue);
+    font-size: 1.1em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    text-align: inherit; /* Inherit alignment from the table headers in HTML */
+}
+
+#rosterTable td {
+    padding: 15px 10px;
+    border-bottom: 1px solid rgba(128, 107, 255, 0.2);
+    vertical-align: middle;
+}
+
+#rosterBody tr:hover {
+    background-color: rgba(128, 107, 255, 0.1);
+    transition: background-color 0.2s ease;
+}
+
+/* 3. 🚀 TABLE ACTION BUTTON STYLES (Targeting the buttons in the screenshot) */
+#rosterTable .action-btn {
+    font-size: 0.9em;
+    padding: 8px 15px;
+    margin: 5px; /* Added margin for spacing between buttons */
+    width: auto;
+    text-transform: none;
+    font-weight: normal;
+    background: none; /* Reset gradient */
+    box-shadow: none;
+}
+
+.edit-btn {
+    background-color: var(--color-edit-btn) !important;
+}
+.edit-btn:hover {
+    background-color: #3558B5 !important;
+}
+
+.delete-btn {
+    background-color: var(--color-delete-btn) !important;
+}
+.delete-btn:hover {
+    background-color: #B02A2A !important;
+}
+
+#rosterTable td:last-child {
+    text-align: right;
+}
+
+/* --- Form Styles (if visible) --- */
+.player-form-card {
+    max-width: 600px;
+    margin-bottom: 30px;
+    text-align: left;
 }
