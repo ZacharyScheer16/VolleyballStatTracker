@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Management - VOLLEYBALL TRACKER</title>
+
+    <style>
+        /* V2.8: GCU THEME - CALM PURPLE + FULL INLINE CSS */
+
+        /* --- Theme Variables --- */
+        :root {
+            --color-dark-bg: #3c2c75;          /* deeper purple background */
+            --color-card-bg: #1e1b2f;          /* darker violet card background */
+            --color-text-light: #e0e0f0;
+            --color-primary-blue: #806bff;     /* calm lavender accent */
+            --color-secondary-blue: #5a47d6;   /* complementary deep purple-blue */
+            --color-text-muted: #a39acb;       /* muted purple-gray for labels */
+            --color-error: #ff5757;
+            --color-edit-btn: #4169E1;         /* Royal Blue for Edit */
+            --color-delete-btn: #CC3333;       /* Crimson Red for Delete */
+        }
+
+        /* 1. GUARANTEED BACKGROUND FIX: Target HTML and BODY */
+        html {
+            background-color: var(--color-dark-bg);
+            background-image: url('https://raw.githubusercontent.com/schulzeth/temp/main/circuit-bg-alt.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: transparent;
+            color: var(--color-text-light);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* --- Navbar (Top Navigation) --- */
+        .navbar {
+            background-color: var(--color-card-bg);
+            border-bottom: 2px solid var(--color-primary-blue);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .navbar-logo {
+            color: var(--color-primary-blue);
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: var(--color-text-light);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1em;
+            padding-bottom: 3px;
+            transition: color 0.2s, border-bottom 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--color-primary-blue);
+            border-bottom: 2px solid var(--color-primary-blue);
+        }
+
+        /* --- Dashboard Main Content Area --- */
+        .dashboard-main {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* --- General Components --- */
+        .welcome-card {
+            background: var(--color-card-bg);
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(128, 107, 255, 0.15);
+            width: 100%;
+        }
+
+        /* Form Inputs & Labels */
+        .form-group {
+            margin-bottom: 35px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: bold;
+            color: var(--color-text-muted);
+            font-size: 1.2em;
+            text-transform: uppercase;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 18px;
+            background-color: #292446;
+            border: 1px solid #4d467a;
+            color: var(--color-text-light);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1.1em;
+        }
+
+
+        /* --- Roster Header (H1 and Add Button) --- */
+        .roster-header-container {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .roster-header-container h1 {
+            color: var(--color-primary-blue);
+            margin: 0;
+            font-size: 2.8em;
+        }
+
+        /* --- BUTTONS (General & Roster) --- */
+        button {
+            background: linear-gradient(180deg, var(--color-primary-blue) 0%, var(--color-secondary-blue) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.5em;
+            font-weight: bold;
+            padding: 20px;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        button:hover {
+            opacity: 0.95;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        #addPlayerButton {
+            width: auto;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            margin: 0;
+        }
+
+        #logoutButton {
+            background: #b469ff;
+            width: auto;
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+        #logoutButton:hover {
+            background: #a35cff;
+        }
+
+        /* --- TABLE STYLES (For Player Management) --- */
+        .roster-table-card {
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 20px 20px 20px;
+        }
+
+        #rosterTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: var(--color-text-light);
+            text-align: left;
+        }
+
+        #rosterTable thead tr {
+            border-bottom: 2px solid var(--color-primary-blue);
+        }
+
+        #rosterTable th {
+            padding: 15px 10px;
+            background-color: var(--color-card-bg);
+            color: var(--color-primary-blue);
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            text-align: inherit;
+        }
+
+        #rosterTable td {
+            padding: 15px 10px;
+            border-bottom: 1px solid rgba(128, 107, 255, 0.2);
+            vertical-align: middle;
+        }
+
+        #rosterBody tr:hover {
+            background-color: rgba(128, 107, 255, 0.1);
+            transition: background-color 0.2s ease;
+        }
+
+        #rosterTable td:last-child {
+            text-align: right;
+        }
+
+        /* 🛑 TABLE ACTION BUTTONS (For buttons generated by JS) 🛑 */
+        /* These reset the general button styles so the JS inline styles take over */
+        .roster-table-card button {
+            font-size: 0.9em;
+            padding: 8px 15px;
+            margin: 5px;
+            width: auto;
+            text-transform: none;
+            font-weight: normal;
+            box-shadow: none;
+            background: none !important;
+        }
+
+        .roster-table-card button:hover {
+            opacity: 0.85;
+        }
+
+        /* --- Form Styles --- */
+        .player-form-card {
+            max-width: 600px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .success-message { color: #63ff8f; }
+        .error-message { color: var(--color-error); }
+    </style>
+</head>
+<body class="dashboard-layout gcu-theme">
+<div class="navbar">
+    <div class="navbar-logo">VOLLEYBALL TRACKER</div>
+    <div class="nav-links">
+        <a href="dashboard.html">Overall Stats</a>
+        <a href="#" id="createMatchNav">Create Match</a>
+        <a href="player-management.html" class="active">Player Management</a>
+        <a href="#">Team Editor</a>
+        <a href="#" id="profileNav">User Profile</a>
+    </div>
+    <button id="logoutButton">Log Out</button>
+</div>
+
+<div class="dashboard-main">
+
+    <div class="roster-header-container">
+        <h1>PLAYER ROSTER</h1>
+        <button id="addPlayerButton">
+            + ADD NEW PLAYER
+        </button>
+    </div>
+
+    <div id="playerFormContainer" class="welcome-card player-form-card" style="display:none;">
+        <h2 id="formTitle" style="text-align: center; color: var(--color-primary-blue); margin-bottom: 30px;">Add New Player</h2>
+
+        <form id="playerForm">
+            <input type="hidden" id="playerId" name="id">
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required placeholder="e.g., Jane Doe">
+            </div>
+
+            <div class="form-group">
+                <label for="number">Jersey Number</label>
+                <input type="number" id="number" name="number" required placeholder="e.g., 9">
+            </div>
+
+            <div class="form-group">
+                <label for="position">Position</label>
+                <select id="position" name="position" required>
+                    <option value="" disabled selected>Select a Position</option>
+                    <option value="Setter">Setter</option>
+                    <option value="Outside Hitter">Outside Hitter</option>
+                    <option value="Opposite Hitter">Opposite Hitter</option>
+                    <option value="Middle Blocker">Middle Blocker</option>
+                    <option value="Libero">Libero</option>
+                    <option value="Defensive Specialist">Defensive Specialist</option>
+                </select>
+            </div>
+
+            <div id="playerMessage" style="text-align: center; font-weight: bold; margin-top: 25px;"></div>
+
+            <button type="submit" style="width: 100%; margin-top: 30px; padding: 15px;">
+                SAVE PLAYER
+            </button>
+        </form>
+    </div>
+    <div class="welcome-card roster-table-card">
+        <table id="rosterTable">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th style="text-align: left;">Name</th>
+                <th>Position</th>
+                <th style="text-align: right;">Actions</th>
+            </tr>
+            </thead>
+            <tbody id="rosterBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="player-management.js"></script>
+</body>
+</html>
