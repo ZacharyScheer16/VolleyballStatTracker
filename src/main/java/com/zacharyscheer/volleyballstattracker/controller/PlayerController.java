@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/players")
+@RequestMapping("/api/player")
 @RequiredArgsConstructor // required args constructor implements constructor
 public class PlayerController {
     private final PlayerService playerService;
