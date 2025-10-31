@@ -15,8 +15,7 @@ COPY pom.xml .
 COPY src ./src
 
 # Build the JAR file
-RUN mvn clean install -DskipTests
-
+RUN mvn clean package -DskipTests
 # ------------------
 # 2. RUNNING STAGE
 # ------------------
