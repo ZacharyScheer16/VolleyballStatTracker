@@ -20,8 +20,7 @@ RUN mvn clean package -DskipTests
 # 2. RUNNING STAGE
 # ------------------
 # This part is correct and should now work
-FROM openjdk:21-slim AS runtime
-
+FROM eclipse-temurin:21-jdk AS runtime
 # Set the working directory
 WORKDIR /app
 
