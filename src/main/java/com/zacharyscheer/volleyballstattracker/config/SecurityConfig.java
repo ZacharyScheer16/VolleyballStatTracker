@@ -4,7 +4,7 @@ import com.zacharyscheer.volleyballstattracker.Security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod; // <-- IMPORT ADDED
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,13 +47,19 @@ public class SecurityConfig {
                         // Allow access to the authentication controller endpoints (like /api/auth/login)
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // NEW RULE: Allow unauthenticated POST requests to create a new player
+                        // Allow unauthenticated POST requests to create a new player (if desired)
                         .requestMatchers(HttpMethod.POST, "/api/player").permitAll()
 
-                        // NEW RULE: Allow unauthenticated GET requests to view players (e.g., for roster view)
+                        // Allow unauthenticated GET requests to view players (e.g., for roster view)
                         .requestMatchers(HttpMethod.GET, "/api/player/**").permitAll()
 
-                        // Require authentication for all other endpoints (e.g., /api/matches, /api/players)
+                        // 💥 FINAL FIX: Require COACH authority for POST /api/matches
+                        .requestMatchers(HttpMethod.POST, "/api/matches").hasAuthority("COACH")
+
+                        // Allow all other authenticated requests to /api/matches/{id} etc.
+                        .requestMatchers("/api/matches/**").authenticated()
+
+                        // Require authentication for all other endpoints
                         .anyRequest().authenticated()
                 )
 
@@ -66,7 +72,6 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
 
                 // 5. Add the JWT filter *before* the standard Spring Security username/password filter
-                // This is the core part that checks the JWT on every secured request.
                 .addFilterBefore(
                         jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class

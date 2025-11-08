@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 public class SetDTO {
     private Long id;
     private Integer homeScore;
-    private Integer awayScore;
-    private Integer setNumber;
+    private Integer opponentScore;
 }
