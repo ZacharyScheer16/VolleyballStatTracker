@@ -30,8 +30,12 @@ public class Match {
     private LocalDate matchDate = LocalDate.from(LocalDateTime.now());
 
     // The opponent's final score in sets (e.g., if we won 3-1, this is 1)
-    @Column(nullable = false)
-    private Integer opponentSetScore = 0;
+
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private Integer opponentSetScore;
+
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private Integer homeSetScore;
 
     // The user (coach/manager) who logged this match
     @ManyToOne(fetch = FetchType.LAZY)
