@@ -5,6 +5,7 @@ import com.zacharyscheer.volleyballstattracker.dto.MatchResponseDTO;
 import com.zacharyscheer.volleyballstattracker.models.Match;
 import com.zacharyscheer.volleyballstattracker.service.MatchService;
 import com.zacharyscheer.volleyballstattracker.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -83,17 +84,40 @@ public class MatchController {
     // --- Other Controller Methods ---
 
     // Example placeholder for another method
+    /**
+     * GET /api/matches/{matchId} : Get a match by ID.
+     */
     @GetMapping("/{matchId}")
     public ResponseEntity<MatchResponseDTO> getMatchById(@PathVariable Long matchId) {
-        // Implementation...
-        return ResponseEntity.ok(matchService.getMatchById(matchId));
+        try {
+            MatchResponseDTO match = matchService.getMatchById(matchId);
+            return ResponseEntity.ok(match);
+        } catch (EntityNotFoundException e) {
+            // Returns 404 Not Found if the match does not exist
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * GET /api/matches/recent : Get the last 10 matches for the authenticated user. (NEW)
+     */
+    @GetMapping("/recent")
+    public ResponseEntity<List<MatchResponseDTO>> getRecentMatches(Authentication authentication) {
+        try {
+            Integer userId = getUserId(authentication);
+            List<MatchResponseDTO> matches = matchService.getRecentMatchesByUserId(userId);
+            return ResponseEntity.ok(matches);
+        } catch (EntityNotFoundException e) {
+            // This typically means the User wasn't found, though it's rare after successful authentication
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Example placeholder for listing all matches
     @GetMapping
     public ResponseEntity<List<MatchResponseDTO>> getAllMatches() {
-        // Implementation...
-        return ResponseEntity.ok(matchService.getAllMatches());
+        List<MatchResponseDTO> matches = matchService.getAllMatches();
+        return ResponseEntity.ok(matches);
     }
 
 }
