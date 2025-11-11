@@ -12,4 +12,5 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
      * from newest to oldest. This replaces the invalid 'MatchScore' order.
      */
     List<Match> findByUserIdOrderByMatchDateDesc(Integer userId);
+    List<Match> findTop10ByUser_IdOrderByMatchDateDesc(Integer userId);
 }
