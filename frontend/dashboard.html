@@ -221,6 +221,33 @@
             .welcome-card { padding: 20px; }
             .stats-grid { grid-template-columns: 1fr; }
         }
+
+        /* Form Styles (for user profile rendering) */
+        .form-group { margin-bottom: 25px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--color-text-muted);
+            font-size: 1em;
+            text-transform: uppercase;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #292446;
+            border: 1px solid #4d467a;
+            color: var(--color-text-light);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1.1em;
+        }
+
+        .error-message { color: var(--color-error); }
+        .success-message { color: var(--color-win); }
+
     </style>
 </head>
 <body onload="lucide.createIcons()">
@@ -228,7 +255,8 @@
     <div class="navbar-logo">VOLLEYBALL TRACKER</div>
     <div class="nav-links">
         <a href="dashboard.html" class="active">Overall Stats</a>
-        <a href="#" id="createMatchNav">Create Match</a>
+        <!-- LINK UPDATED HERE -->
+        <a href="create-match.html" id="createMatchNav">Create Match</a>
         <a href="player-management.html">Player Management</a>
         <a href="#">Team Editor</a>
         <a href="#" id="profileNav">User Profile</a>
