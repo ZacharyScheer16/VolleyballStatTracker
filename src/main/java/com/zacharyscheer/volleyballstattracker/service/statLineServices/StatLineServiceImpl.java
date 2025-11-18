@@ -1,0 +1,115 @@
+package com.zacharyscheer.volleyballstattracker.service.statLineServices;
+
+import com.zacharyscheer.volleyballstattracker.models.StatLine;
+import com.zacharyscheer.volleyballstattracker.repository.StatLineRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+
+public class StatLineServiceImpl implements StatLineService {
+    private final StatLineRepository statLineRepository;
+
+    public StatLineServiceImpl(StatLineRepository statLineRepository) {
+        this.statLineRepository = statLineRepository;
+    }
+
+    /**
+     * Core utility to fetch the unique StatLine for a player within a set.
+     */
+    private StatLine findStatLine(Long setId, Integer playerId) {
+        // This relies on the custom repository method we defined previously.
+        return statLineRepository.findBySetIdAndPlayerId(setId, playerId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("StatLine not found for Set ID %d and Player ID %d. Ensure the set was started correctly.", setId, playerId)
+                ));
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public StatLine getStatLineBySetAndPlayer(Long setId, Integer playerId) {
+        return findStatLine(setId, playerId);
+    }
+
+    // ----------------------------------------------------------------------------------
+    // HITTING STATS
+    // ----------------------------------------------------------------------------------
+
+    @Override
+    @Transactional
+    public StatLine recordKill(Long setId, Integer playerId) {
+        StatLine sl = findStatLine(setId, playerId);
+        sl.setKills(sl.getKills() + 1);
+        sl.setAttackAttempts(sl.getAttackAttempts() + 1);
+
+        return statLineRepository.save(sl);
+    }
+
+    @Override
+    @Transactional
+    public StatLine recordAttackAttempt(Long setId, Integer playerId) {
+        StatLine line = findStatLine(setId, playerId);
+        line.setAttackAttempts(line.getAttackAttempts() + 1);
+        return statLineRepository.save(line);
+    }
+
+    @Override
+    public StatLine recordKillError(Long setId, Integer playerId) {
+        return null;
+    }
+
+    @Override
+    public StatLine recordServiceAce(Long setId, Integer playerId) {
+        return null;
+    }
+
+    @Override
+    public StatLine recordServiceAttempt(Long setId, Integer playerId) {
+        return null;
+    }
+
+    @Override
+    public StatLine recordServiceError(Long setId, Integer playerId) {
+        return null;
+    }
+
+    @Override
+    public StatLine recordPassRating(Long setId, Integer playerId, int rating) {
+        return null;
+    }
+
+    @Override
+    public StatLine recordDig(Long setId, Integer playerId) {
+        return null;
+    }
+
+    @Override
+    public StatLine recordDigError(Long setId, Integer playerId) {
+        return null;
+    }
+
+    @Override
+    public StatLine recordBlock(Long setId, Integer playerId) {
+        return null;
+    }
+
+    @Override
+    public StatLine recordBlockError(Long setId, Integer playerId) {
+        return null;
+    }
+
+    @Override
+    public StatLine recordAssist(Long setId, Integer playerId) {
+        return null;
+    }
+
+    @Override
+    public StatLine recordSetAttempt(Long setId, Integer playerId) {
+        return null;
+    }
+
+    @Override
+    public StatLine recordSetError(Long setId, Integer playerId) {
+        return null;
+    }
+}
