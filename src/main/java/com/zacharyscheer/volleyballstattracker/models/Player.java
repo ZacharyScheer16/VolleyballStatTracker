@@ -4,6 +4,8 @@ package com.zacharyscheer.volleyballstattracker.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -27,5 +29,13 @@ public class Player {
 
     @Column
     private String position; // e.g., "Outside Hitter", "Libero", "Setter"
+
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
+    private List<StatLine> statLines;
+
+    // --- Relationship to User/Team Owner ---
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = true)
+    private User user; // Links this player to the team's owner/manager
 
 }
