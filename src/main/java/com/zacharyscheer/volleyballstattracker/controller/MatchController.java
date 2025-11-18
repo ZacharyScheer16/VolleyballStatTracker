@@ -3,8 +3,10 @@ package com.zacharyscheer.volleyballstattracker.controller;
 import com.zacharyscheer.volleyballstattracker.dto.MatchRequestDTO;
 import com.zacharyscheer.volleyballstattracker.dto.MatchResponseDTO;
 import com.zacharyscheer.volleyballstattracker.models.Match;
+import com.zacharyscheer.volleyballstattracker.models.Set;
 import com.zacharyscheer.volleyballstattracker.service.MatchService;
 import com.zacharyscheer.volleyballstattracker.service.UserService;
+import com.zacharyscheer.volleyballstattracker.service.setService.SetService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +43,22 @@ public class MatchController {
         return ResponseEntity
                 .created(URI.create("/api/matches/" + newMatch.getId()))
                 .body(responseDTO);
+    }
+
+    private final SetService setService;
+
+    @PostMapping("/{matchId}/start-set")
+    public ResponseEntity<Set> startSetAndInitializeStats(
+            @PathVariable Long matchId,
+            @RequestBody List<Long> rosterIds) {
+
+        // Call the service method to create the Set and StatLines
+        Set newSet = setService.startNewSet(matchId, rosterIds);
+
+        // Return the newly created Set with a 201 Created status
+        return ResponseEntity
+                .created(URI.create("/api/sets/" + newSet.getId()))
+                .body(newSet);
     }
 
     /**
