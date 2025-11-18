@@ -53,7 +53,10 @@ public class SecurityConfig {
                         // Allow unauthenticated GET requests to view players (e.g., for roster view)
                         .requestMatchers(HttpMethod.GET, "/api/player/**").permitAll()
 
-                        // 💥 FINAL FIX: Require COACH authority for POST /api/matches
+                        // FIX: Allow authenticated access to ALL /api/stats endpoints
+                        .requestMatchers("/api/stats/**").authenticated()
+
+                        // Require COACH authority for POST /api/matches
                         .requestMatchers(HttpMethod.POST, "/api/matches").hasAuthority("COACH")
 
                         // Allow all other authenticated requests to /api/matches/{id} etc.

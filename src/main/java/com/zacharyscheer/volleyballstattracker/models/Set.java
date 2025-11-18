@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,7 +36,11 @@ public class Set {
     // Many-to-one relationship back to the Match
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "match_id", nullable = false)
+    @JsonIgnore
     private Match match;
+
+    @OneToMany(mappedBy = "set", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StatLine> playerStats; // List of StatLines for this set
 
     // --- Getters and Setters (omitted for brevity) ---
     // ...
