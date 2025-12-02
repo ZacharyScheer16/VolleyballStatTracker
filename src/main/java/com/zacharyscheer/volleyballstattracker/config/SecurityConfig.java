@@ -62,6 +62,8 @@ public class SecurityConfig {
                         // Allow all other authenticated requests to /api/matches/{id} etc.
                         .requestMatchers("/api/matches/**").authenticated()
 
+                        .requestMatchers("/api/stats/**").authenticated()
+
                         // Require authentication for all other endpoints
                         .anyRequest().authenticated()
                 )

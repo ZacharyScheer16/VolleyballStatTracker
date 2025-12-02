@@ -56,4 +56,9 @@ public class StatController {
         return ResponseEntity.ok(statLineMapper.toDto(updatedStats));
     }
 
+//    @PostMapping("/record/attack-error")
+//    public ResponseEntity<StatLineResponseDTO> recordAttackError(@RequestParam Long setId){
+//
+//    }
+
 }

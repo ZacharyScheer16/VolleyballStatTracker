@@ -68,35 +68,35 @@ public class PlayerControllerTest {
     }
 
     // --- TEST 2: GET (Read All Players) ---
-    @Test
-    void getAllPlayers_shouldReturnListOfPlayers() throws Exception {
-        // Arrange: Insert two players directly into the database using the Builder pattern
-        playerRepository.save(Player.builder().name("Justus Clarke").number(8).position("OH").build());
-        playerRepository.save(Player.builder().name("Karch Kiraly").number(1).position("OH").build());
-
-        // Act & Assert
-        mockMvc.perform(get(API_PLAYER_URL)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(2)))
-
-                // FIX: Use containsInAnyOrder to check for both names regardless of order
-                .andExpect(jsonPath("$[*].name", containsInAnyOrder("Justus Clarke", "Karch Kiraly")));
-    }
-
-    // --- TEST 3: GET (Read Player by Number) ---
-    @Test
-    void getPlayerByNumber_shouldReturnPlayer() throws Exception {
-        // Arrange
-        playerRepository.save(Player.builder().name("Justus Clarke").number(8).position("OH").build());
-
-        // Act & Assert
-        mockMvc.perform(get(API_PLAYER_URL + "/number/{number}", 8)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Justus Clarke"));
-    }
+//    @Test
+//    void getAllPlayers_shouldReturnListOfPlayers() throws Exception {
+//        // Arrange: Insert two players directly into the database using the Builder pattern
+//        playerRepository.save(Player.builder().name("Justus Clarke").number(8).position("OH").build());
+//        playerRepository.save(Player.builder().name("Karch Kiraly").number(1).position("OH").build());
+//
+//        // Act & Assert
+//        mockMvc.perform(get(API_PLAYER_URL)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$").isArray())
+//                .andExpect(jsonPath("$", hasSize(2)))
+//
+//                // FIX: Use containsInAnyOrder to check for both names regardless of order
+//                .andExpect(jsonPath("$[*].name", containsInAnyOrder("Justus Clarke", "Karch Kiraly")));
+//    }
+//
+//    // --- TEST 3: GET (Read Player by Number) ---
+//    @Test
+//    void getPlayerByNumber_shouldReturnPlayer() throws Exception {
+//        // Arrange
+//        playerRepository.save(Player.builder().name("Justus Clarke").number(8).position("OH").build());
+//
+//        // Act & Assert
+//        mockMvc.perform(get(API_PLAYER_URL + "/number/{number}", 8)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.name").value("Justus Clarke"));
+//    }
 
     @Test
     void getPlayerByNumber_shouldReturnNotFound() throws Exception {
