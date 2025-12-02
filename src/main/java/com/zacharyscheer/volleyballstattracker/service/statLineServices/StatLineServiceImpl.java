@@ -40,7 +40,7 @@ public class StatLineServiceImpl implements StatLineService {
     public StatLine recordKill(Long setId, Integer playerId) {
         StatLine sl = findStatLine(setId, playerId);
         sl.setKills(sl.getKills() + 1);
-        sl.setAttackAttempts(sl.getAttackAttempts() + 1);
+        recordAttackAttempt(setId, playerId);
 
         return statLineRepository.save(sl);
     }
@@ -52,10 +52,14 @@ public class StatLineServiceImpl implements StatLineService {
         line.setAttackAttempts(line.getAttackAttempts() + 1);
         return statLineRepository.save(line);
     }
-
+    @Transactional
     @Override
     public StatLine recordKillError(Long setId, Integer playerId) {
-        return null;
+        StatLine line = findStatLine(setId, playerId);
+        line.setKillErrors(line.getKillErrors() + 1);
+        line.setAttackAttempts(line.getAttackAttempts() +1);
+        return statLineRepository.save(line);
+
     }
 
     @Override
