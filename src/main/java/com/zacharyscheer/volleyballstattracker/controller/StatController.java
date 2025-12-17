@@ -30,7 +30,9 @@ public class StatController {
         return ResponseEntity.ok(statLineMapper.toDto(stats));
     }
 
-    // --- WRITE/RECORD Endpoints (Testing the implemented Hitting methods) ---
+    // -------------------------------------------------------------------------
+    // HITTING ENDPOINTS (Testing the implemented Hitting methods)
+    // -------------------------------------------------------------------------
 
     /**
      * Records a Kill and increments AttackAttempts by 1.
@@ -56,9 +58,15 @@ public class StatController {
         return ResponseEntity.ok(statLineMapper.toDto(updatedStats));
     }
 
-//    @PostMapping("/record/attack-error")
-//    public ResponseEntity<StatLineResponseDTO> recordAttackError(@RequestParam Long setId){
-//
-//    }
+    /**
+     * Records a Kill Error (hitting out, blocked, etc.) and increments AttackAttempts by 1.
+     */
+    @PostMapping("/record/kill-error")
+    public ResponseEntity<StatLineResponseDTO> recordKillError(
+            @RequestParam Long setId,
+            @RequestParam Integer playerId) {
 
+        StatLine updatedStats = statLineService.recordKillError(setId, playerId);
+        return ResponseEntity.ok(statLineMapper.toDto(updatedStats));
+    }
 }

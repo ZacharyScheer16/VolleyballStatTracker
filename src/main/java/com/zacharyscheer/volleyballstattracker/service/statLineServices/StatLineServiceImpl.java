@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-
 public class StatLineServiceImpl implements StatLineService {
     private final StatLineRepository statLineRepository;
 
@@ -25,6 +24,7 @@ public class StatLineServiceImpl implements StatLineService {
                         String.format("StatLine not found for Set ID %d and Player ID %d. Ensure the set was started correctly.", setId, playerId)
                 ));
     }
+
     @Override
     @Transactional(readOnly = true)
     public StatLine getStatLineBySetAndPlayer(Long setId, Integer playerId) {
@@ -40,7 +40,8 @@ public class StatLineServiceImpl implements StatLineService {
     public StatLine recordKill(Long setId, Integer playerId) {
         StatLine sl = findStatLine(setId, playerId);
         sl.setKills(sl.getKills() + 1);
-        recordAttackAttempt(setId, playerId);
+        // FIX: Directly increment attack attempts here for efficiency
+        sl.setAttackAttempts(sl.getAttackAttempts() + 1);
 
         return statLineRepository.save(sl);
     }
@@ -52,6 +53,7 @@ public class StatLineServiceImpl implements StatLineService {
         line.setAttackAttempts(line.getAttackAttempts() + 1);
         return statLineRepository.save(line);
     }
+
     @Transactional
     @Override
     public StatLine recordKillError(Long setId, Integer playerId) {
@@ -59,12 +61,19 @@ public class StatLineServiceImpl implements StatLineService {
         line.setKillErrors(line.getKillErrors() + 1);
         line.setAttackAttempts(line.getAttackAttempts() +1);
         return statLineRepository.save(line);
-
     }
+
+    // ----------------------------------------------------------------------------------
+    // REST OF STATS (Returning null/Not implemented yet)
+    // ----------------------------------------------------------------------------------
 
     @Override
     public StatLine recordServiceAce(Long setId, Integer playerId) {
-        return null;
+        StatLine line =  findStatLine(setId, playerId);
+        line.setServiceAce(line.getServiceAce() + 1);
+        line.setServiceAttempt(line.getServiceAttempt() + 1);
+
+        return statLineRepository.save(line);
     }
 
     @Override

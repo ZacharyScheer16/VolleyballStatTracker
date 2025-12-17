@@ -1,4 +1,4 @@
-package com.zacharyscheer.volleyballstattracker.dto.stat;
+package com.zacharyscheer.volleyballstattracker.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Min;
