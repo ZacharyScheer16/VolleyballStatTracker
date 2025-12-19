@@ -69,4 +69,17 @@ public class StatController {
         StatLine updatedStats = statLineService.recordKillError(setId, playerId);
         return ResponseEntity.ok(statLineMapper.toDto(updatedStats));
     }
-}
+
+    /**
+     * Records an Service error (e.g. in net, out of bounds).
+     */
+
+    @PostMapping("/record/service-error")
+    public ResponseEntity<StatLineResponseDTO> recordServiceError(
+            @RequestParam Long setId,
+            @RequestParam Integer playerId) {
+
+        StatLine updatedStats = statLineService.recordServiceError(setId, playerId);
+        return ResponseEntity.ok(statLineMapper.toDto(updatedStats));
+    }
+    }

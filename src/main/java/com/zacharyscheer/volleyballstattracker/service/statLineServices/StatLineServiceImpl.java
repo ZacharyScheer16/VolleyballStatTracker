@@ -78,17 +78,37 @@ public class StatLineServiceImpl implements StatLineService {
 
     @Override
     public StatLine recordServiceAttempt(Long setId, Integer playerId) {
-        return null;
+        StatLine line = findStatLine(setId, playerId);
+        line.setServiceAttempt(line.getServiceAttempt() + 1);
+        return statLineRepository.save(line);
     }
 
     @Override
     public StatLine recordServiceError(Long setId, Integer playerId) {
-        return null;
+        StatLine line = findStatLine(setId, playerId);
+        line.setServiceAttempt(line.getServiceAttempt() + 1);
+        line.setServiceError(line.getServiceError() + 1);
+        return statLineRepository.save(line);
     }
 
     @Override
     public StatLine recordPassRating(Long setId, Integer playerId, int rating) {
-        return null;
+        StatLine line = findStatLine(setId, playerId);
+        if(rating <0 || rating >3){
+            throw new IllegalArgumentException("rating should be between 0 and 3");
+        }else if(rating == 0){
+            line.setZeroPass(line.getZeroPass() + 1);
+        }else if(rating == 1){
+            line.setOnePass(line.getOnePass() + 1);
+        }else if(rating == 2){
+            line.setTwoPass(line.getTwoPass() + 1);
+        }else {
+            line.setThreePass(line.getThreePass() + 1);
+        }
+        StatLine saved =  statLineRepository.save(line);
+
+
+        return saved;
     }
 
     @Override
