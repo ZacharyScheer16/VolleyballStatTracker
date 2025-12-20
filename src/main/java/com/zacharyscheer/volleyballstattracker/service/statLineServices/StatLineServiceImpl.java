@@ -113,12 +113,16 @@ public class StatLineServiceImpl implements StatLineService {
 
     @Override
     public StatLine recordDig(Long setId, Integer playerId) {
-        return null;
+        StatLine line = findStatLine(setId, playerId);
+        line.setDigs(line.getDigs() + 1);
+        return statLineRepository.save(line);
     }
 
     @Override
     public StatLine recordDigError(Long setId, Integer playerId) {
-        return null;
+        StatLine line = findStatLine(setId, playerId);
+        line.setDigError(line.getDigError() + 1);
+        return statLineRepository.save(line);
     }
 
     @Override
