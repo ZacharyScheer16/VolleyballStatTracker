@@ -82,4 +82,15 @@ public class StatController {
         StatLine updatedStats = statLineService.recordServiceError(setId, playerId);
         return ResponseEntity.ok(statLineMapper.toDto(updatedStats));
     }
+    @PostMapping("/record/dig")
+    public ResponseEntity<StatLineResponseDTO> recordDig(@RequestParam Long setId, @RequestParam Integer playerId) {
+        StatLine updatedStats = statLineService.recordDig(setId, playerId);
+        return ResponseEntity.ok(statLineMapper.toDto(updatedStats));
+    }
+
+    @PostMapping("/record/dig")
+    public ResponseEntity<StatLineResponseDTO> recordDigError(@RequestParam Long setId, @RequestParam Integer playerId) {
+        StatLine updatedStats = statLineService.recordDigError(setId, playerId);
+        return ResponseEntity.ok(statLineMapper.toDto(updatedStats));
+    }
     }
