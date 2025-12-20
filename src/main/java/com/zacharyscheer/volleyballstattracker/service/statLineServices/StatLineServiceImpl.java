@@ -127,21 +127,29 @@ public class StatLineServiceImpl implements StatLineService {
 
     @Override
     public StatLine recordBlock(Long setId, Integer playerId) {
-        return null;
+        StatLine line = findStatLine(setId, playerId);
+        line.setBlocks(line.getBlocks() + 1);
+        return statLineRepository.save(line);
     }
 
     @Override
     public StatLine recordBlockError(Long setId, Integer playerId) {
-        return null;
+        StatLine line = findStatLine(setId, playerId);
+        line.setBlockError(line.getBlockError() + 1);
+        return statLineRepository.save(line);
     }
 
     @Override
     public StatLine recordAssist(Long setId, Integer playerId) {
+        StatLine line = findStatLine(setId, playerId);
+
         return null;
     }
 
     @Override
     public StatLine recordSetAttempt(Long setId, Integer playerId) {
+        StatLine line = findStatLine(setId, playerId);
+
         return null;
     }
 
