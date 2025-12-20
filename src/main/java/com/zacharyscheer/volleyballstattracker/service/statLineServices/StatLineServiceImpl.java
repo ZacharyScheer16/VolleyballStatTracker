@@ -142,15 +142,15 @@ public class StatLineServiceImpl implements StatLineService {
     @Override
     public StatLine recordAssist(Long setId, Integer playerId) {
         StatLine line = findStatLine(setId, playerId);
-
-        return null;
+        line.setAssists(line.getAssists() + 1);
+        return statLineRepository.save(line);
     }
 
     @Override
     public StatLine recordSetAttempt(Long setId, Integer playerId) {
         StatLine line = findStatLine(setId, playerId);
-
-        return null;
+        line.setSetAttempts(line.getSetAttempts() + 1);
+        return statLineRepository.save(line);
     }
 
     @Override
