@@ -155,6 +155,8 @@ public class StatLineServiceImpl implements StatLineService {
 
     @Override
     public StatLine recordSetError(Long setId, Integer playerId) {
-        return null;
+        StatLine line = findStatLine(setId, playerId);
+        line.setSetError(line.getSetError() + 1);
+        return statLineRepository.save(line);
     }
 }
