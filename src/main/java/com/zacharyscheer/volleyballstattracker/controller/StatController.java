@@ -93,4 +93,14 @@ public class StatController {
         StatLine updatedStats = statLineService.recordDigError(setId, playerId);
         return ResponseEntity.ok(statLineMapper.toDto(updatedStats));
     }
+    @PostMapping("/record/block")
+    public ResponseEntity<StatLineResponseDTO> recordBlocked(@RequestParam Long setId, @RequestParam Integer playerId) {
+          StatLine updatedStats = statLineService.recordBlock(setId, playerId);
+        return ResponseEntity.ok(statLineMapper.toDto(updatedStats));
+    }
+    @PostMapping("/record/block-error")
+    public ResponseEntity<StatLineResponseDTO> recordBlockError(@RequestParam Long setId, @RequestParam Integer playerId){
+        StatLine updatedStats = statLineService.recordBlockError(setId, playerId);
+        return ResponseEntity.ok(statLineMapper.toDto(updatedStats));
+    }
     }
