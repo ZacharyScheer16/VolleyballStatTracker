@@ -68,6 +68,7 @@ public class StatLineServiceImpl implements StatLineService {
     // ----------------------------------------------------------------------------------
 
     @Override
+    @Transactional
     public StatLine recordServiceAce(Long setId, Integer playerId) {
         StatLine line =  findStatLine(setId, playerId);
         line.setServiceAce(line.getServiceAce() + 1);
@@ -77,6 +78,7 @@ public class StatLineServiceImpl implements StatLineService {
     }
 
     @Override
+    @Transactional
     public StatLine recordServiceAttempt(Long setId, Integer playerId) {
         StatLine line = findStatLine(setId, playerId);
         line.setServiceAttempt(line.getServiceAttempt() + 1);
@@ -84,6 +86,7 @@ public class StatLineServiceImpl implements StatLineService {
     }
 
     @Override
+    @Transactional
     public StatLine recordServiceError(Long setId, Integer playerId) {
         StatLine line = findStatLine(setId, playerId);
         line.setServiceAttempt(line.getServiceAttempt() + 1);
@@ -92,6 +95,7 @@ public class StatLineServiceImpl implements StatLineService {
     }
 
     @Override
+    @Transactional
     public StatLine recordPassRating(Long setId, Integer playerId, int rating) {
         StatLine line = findStatLine(setId, playerId);
         if(rating <0 || rating >3){
@@ -112,6 +116,7 @@ public class StatLineServiceImpl implements StatLineService {
     }
 
     @Override
+    @Transactional
     public StatLine recordDig(Long setId, Integer playerId) {
         StatLine line = findStatLine(setId, playerId);
         line.setDigs(line.getDigs() + 1);
@@ -119,6 +124,7 @@ public class StatLineServiceImpl implements StatLineService {
     }
 
     @Override
+    @Transactional
     public StatLine recordDigError(Long setId, Integer playerId) {
         StatLine line = findStatLine(setId, playerId);
         line.setDigError(line.getDigError() + 1);
@@ -126,6 +132,7 @@ public class StatLineServiceImpl implements StatLineService {
     }
 
     @Override
+    @Transactional
     public StatLine recordBlock(Long setId, Integer playerId) {
         StatLine line = findStatLine(setId, playerId);
         line.setBlocks(line.getBlocks() + 1);
@@ -133,6 +140,7 @@ public class StatLineServiceImpl implements StatLineService {
     }
 
     @Override
+    @Transactional
     public StatLine recordBlockError(Long setId, Integer playerId) {
         StatLine line = findStatLine(setId, playerId);
         line.setBlockError(line.getBlockError() + 1);
@@ -140,6 +148,7 @@ public class StatLineServiceImpl implements StatLineService {
     }
 
     @Override
+    @Transactional
     public StatLine recordAssist(Long setId, Integer playerId) {
         StatLine line = findStatLine(setId, playerId);
         line.setAssists(line.getAssists() + 1);
@@ -147,6 +156,7 @@ public class StatLineServiceImpl implements StatLineService {
     }
 
     @Override
+    @Transactional
     public StatLine recordSetAttempt(Long setId, Integer playerId) {
         StatLine line = findStatLine(setId, playerId);
         line.setSetAttempts(line.getSetAttempts() + 1);
@@ -154,6 +164,7 @@ public class StatLineServiceImpl implements StatLineService {
     }
 
     @Override
+    @Transactional
     public StatLine recordSetError(Long setId, Integer playerId) {
         StatLine line = findStatLine(setId, playerId);
         line.setSetError(line.getSetError() + 1);
